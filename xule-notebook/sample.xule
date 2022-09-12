@@ -1,0 +1,24 @@
+constant $period = date('2021-12-31')
+constant $unit = unit(iso4217:CNY)
+namespace iso4217 = http://www.xbrl.org/2003/iso4217
+output example
+[@concept.local-name in list('AssetsCurrent','AssetsNoncurrent') @period = $period]
+message "The value of {$rule-value.concept} {$rule-value.concept.local-name} for {$rule-value.period}: {$rule-value} {$rule-value.unit}"
+
+output examplecount
+list([covered @period = $period @unit = $unit] ).length
+message"There are {$rule-value} non-dimensional {$unit} facts for {$period} in the list of evaluated concepts."
+
+output examplesum
+$nca = [@concept.local-name = 'AssetsNoncurrent' @period = $period @unit = $unit]
+$ca = [@concept.local-name = 'AssetsCurrent' @period = $period @unit = $unit]
+$a = [@concept.local-name = 'Assets' @period = $period @unit = $unit]
+$ncaa = $nca + $ca
+$a == $ncaa
+message
+   {if $a == $ncaa
+    "In the report, the sum of the values of " + $nca.concept.local-name.string + ", which is " + $nca + " " + $unit.string + " and " + $ca.concept.local-name.string + ", which is " + $ca + " " + $unit.string + " for " + $period.end.string + " is equal to " + $ncaa + " " + $unit.string + ", which is the value of Assets: " + $a + " " + $unit.string + "."
+   else
+   "There might be an issue in the calculation for " + $a.concept.local-name.string + " at " + $period.end.string + ", which is calculated as " + $ncaa + " " + $unit.string + " and reported as " + $a + " " + $unit.string + " in this report."}
+
+// .\arellecmdline.exe --plugins "xule | transforms/SEC" -f "https://www.sec.gov/Archives/edgar/data/1753673/000121390022027184/f20f2021_scienjoyhold.htm" --xule-compile "D:/sample.xule" --xule-run --xule-rule-set "D:/sample.zip"
