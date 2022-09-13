@@ -2,7 +2,19 @@ name: xule-arelle
 
 dependencies:
   - python=3.9
-  - numpy
-  - pandas
-  - requests
-  - xlrd
+  - pip
+  - lxml>=4.6.3
+  - isodate==0.6.0
+  - aniso8601==9.0.1
+  - holidays==0.11.1
+  - regex
+  - tabulate
+  - numpy==1.22.0
+  - pyparsing==2.4.7
+  - pip:
+    - lxml
+    - isodate
+    - aniso8601
+    - holidays
+    - pyparsing
+    
